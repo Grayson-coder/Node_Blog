@@ -1,0 +1,79 @@
+<!-- 继承骨架模板 -->
+{{extend './common/framework.art'}}  
+
+{{block 'link'}}
+	<link rel="stylesheet" href="/home/css/article.css">
+{{/block}}
+
+{{block 'content'}}
+	<!-- 头部 -->
+	{{include './common/header.art'}}  
+
+	<!-- 文章框架开始 -->
+	<div class="article">
+		<div class="w1100">
+			<div class="container">
+				<div class="article-header">
+					<!-- 文章标题 -->
+					<h3 class="article-title">{{ article.title }}</h3>
+					<!-- 文章作者以及出版日期 -->
+					<div class="article-info">
+						<span class="author">{{ article.author.userName }}</span>
+						<span>{{ dateFormat(article.publicDate, 'yyyy-mm-dd') }}</span>
+					</div>
+				</div>
+				<!-- 文章内容 -->
+				<div class="article-content">
+					{{@ article.content }}
+				</div>
+
+				{{if userInfo}}
+					<!-- 评论区 -->
+					<div class="article-comment">
+						<h4>评论</h4>
+						
+						<form class="comment-form" action="http://localhost:3000/home/comment" method="POST">
+							<!-- 评论内容 -->
+							<textarea class="comment" name="content"></textarea>
+
+							<!-- 存储提交评论的用户id和文章id -->
+							<input type="hidden" name="uid" value="{{@ userInfo._id }}">
+							<input type="hidden" name="aid" value="{{@ article._id }}">
+
+							<div class="items">
+								<input type="submit" value="提交">
+							</div>
+						</form>
+
+						<!-- 评论列表 -->
+						{{each comment}}
+							<div class="comment-list">
+								<div class="mb10">
+									<div class="article-info">
+										<!-- 评论用户名 -->
+										<span class="author">{{ $value && $value.uid.userName }}</span>
+										<!-- 评论时间 -->
+										<span>{{ $value && dateFormat($value.time, 'yyyy-mm-dd') }}</span>
+										<!-- 评论用户的邮箱 -->
+										<span>{{ $value && $value.uid.email }}</span>
+									</div>
+									<div class="comment-content">
+										<!-- 评论内容 -->
+										{{ $value && $value.content }}
+									</div>
+								</div>
+							</div>
+						{{/each}}
+
+					</div>
+
+				{{else}}
+					<div><h2>先进行登录，再对文章进行评价</h2></div>
+				{{/if}}
+
+			</div>
+		</div>
+	</div>
+	<!-- 文章框架结束 -->
+{{/block}}
+

@@ -1,0 +1,100 @@
+<!-- 继承HTML骨架 -->
+{{extend "./common/framework.art"}}
+
+<!-- 填 名为 'content' 的坑 -->
+{{block 'content'}}
+
+    {{include './common/header.art'}} 
+    
+    <!-- 主体内容 -->
+    <div class="content">
+        {{include './common/aside.art'}}
+        <div class="main">
+            <!-- 分类标题 -->
+            <div class="title">
+                <h2>{{ opearte }}</h2>
+                <h4>{{@ article && article._id  || ''}}</h4>
+            </div>
+            <!-- /分类标题 -->
+
+            <!-- 文章编辑的表单 -->
+            <form class="form-container" method="POST" action="http://localhost:3000/admin/{{ link }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>标题</label>
+                    <input type="text" class="form-control" placeholder="请输入文章标题" name="title" value="{{ article && article.title }}">
+                </div>
+                <div class="form-group">
+                    <label>作者</label>
+                    <input type="text" class="form-control" readonly name="author" value="{{@userInfo ? userInfo._id : '请登录'}}">
+                </div>
+                <div class="form-group">
+                    <label>发布时间</label>
+                    <input type="date" class="form-control" name="publicDate">
+                </div>
+                
+                <div class="form-group">
+                   <label for="exampleInputFile">文章封面</label>
+                   <input type="file" name="cover" class="file">
+                   <!-- 文章封面图片 -->
+                   <div class="thumbnail-waper">
+                       <img class="img-thumbnail" src="">
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label>内容</label>
+                    <textarea class="form-control" id="editor" name="content">{{@ article && article.content || ''}}</textarea>
+                </div>
+                <div class="buttons">
+                    <input type="submit" class="btn btn-primary" value="{{ opearte }}">
+                </div>
+                <input type="hidden" name="id" value="{{@ article && article._id }}">
+            </form>
+            
+        </div>
+    </div>
+{{/block}}
+
+
+<!-- 填 名为 'script' 的坑 -->
+{{block 'script'}} 
+
+    <script src="/admin/lib/ckeditor5/ckeditor.js"></script>
+    <script type="text/javascript">
+    
+        let editor;
+
+        ClassicEditor
+                .create( document.querySelector('#editor'))
+                .then(newEditor => {
+                    editor = newEditor;
+                })
+                .catch( error => {
+                    console.error( error );
+                });
+
+        // 获取数据
+        // const editorData = editor.getData();
+
+
+        // 实现选择图片  渲染到页面的功能
+        let file = document.querySelector('.file')  // 选择文件的表单按钮
+        let coverImg = document.querySelector('.img-thumbnail')  // img标签
+        // 当选择完文件后触发事件
+        file.onchange = function() {  
+            // 获取用户选择的第一个文件的相关信息
+            let selectFile = this.files[0]
+
+            // 1. 创建文件读取对象
+            let reader = new FileReader()
+            // 2. 读取文件
+            reader.readAsDataURL(selectFile)
+            // 3. 监听onload事件
+            reader.onload = () => {
+                // 将文件读取的结果显示在页面中
+                coverImg.src = reader.result
+            }
+        }
+    </script>
+
+{{/block}}
+

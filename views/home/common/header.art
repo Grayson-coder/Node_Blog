@@ -1,0 +1,28 @@
+<!-- 头部框架开始 -->
+<div class="header">
+    <div class="w1100">
+        
+        <!-- 网站logo开始 -->
+        <h1 class="logo fl">
+            <a href="http://localhost:3000/home"><img src="/home/images/logo.png" alt="黑马程序员"></a>
+        </h1>
+
+        <!-- 网站导航开始 -->
+        <ul class="navigation fr">
+            <li>
+                <a href="http://localhost:3000/home">首页</a>
+            </li>
+            <li>
+                <a href="http://localhost:3000/admin/login">{{ userInfo ? userInfo.userName + ',你好' : '给老子去登录账号' }}</a>
+            </li>
+            <li>
+                <a href="http://localhost:3000/admin/exit">退出登录</a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+
+
+

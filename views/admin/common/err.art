@@ -1,0 +1,22 @@
+{{extend './framework.art'}}
+
+{{block 'content'}}
+    <p class="time"></p>
+    <p class="bg-danger error">{{msg}}</p>
+{{/block}}
+
+{{block 'script'}}
+    <script>
+        let p = document.querySelector('.time')
+        let time = 5
+        p.innerHTML = `${time}秒后自动跳转到登录页面.............`
+        let timer = setInterval(() => {
+            if (time === 0) {
+                location.href = 'http://localhost:3000/admin/login'
+                clearInterval(timer)
+            }
+            time--
+            p.innerHTML = `${time}秒后自动跳转到登录页面..............`
+        }, 1000);
+    </script>
+{{/block}}

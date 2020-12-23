@@ -1,0 +1,77 @@
+<!-- 继承骨架模板 -->
+{{extend './common/framework.art'}}  
+
+{{block 'link'}}
+	<link rel="stylesheet" href="/home/css/index.css">
+{{/block}}
+
+
+{{block 'content'}}
+	<!-- 头部 -->
+	{{include './common/header.art'}}  
+
+	<!-- 文章列表 -->
+	<ul class="list w1100">
+		{{each article.records}}
+			<li class="{{ $index % 2 == 0 ? 'fr' : 'f1' }}">
+				<!-- 封面图片 -->
+				<a href="http://localhost:3000/home/article?id={{@ $value._id }}" class="thumbnail"><img src="{{ $value.cover }}"></a>
+
+				<div class="content">
+					<!-- 文章标题 -->
+					<a class="article-title" href="http://localhost:3000/home/article?id={{@ $value._id }}">{{ $value.title }}</a>
+
+					<!-- 文章作者以及出版时间 -->
+					<div class="article-info">
+						<span class="author">{{ $value.author.userName }}</span>
+						<span>{{ dateFormat($value.publicDate, 'yyyy-mm-dd') }}</span>
+					</div>
+					
+					<!-- 文章内容 -->
+					<div class="brief">
+						{{@ $value.content.substr(0, 100) + '...' }}
+					</div>
+				</div>
+			</li>
+		{{/each}}
+
+
+
+	</ul>
+
+	<!-- 分页 -->
+	<div class="page w1100">
+		<a href="http://localhost:3000/home?page={{ article.page - 1 }}" class="pre">上一页</a>
+
+		{{each article.display}}
+			<a href="http://localhost:3000/home?page={{ $value }}" class="{{ article.page == $value ? 'active' : '' }}">{{ $value }}</a>
+		{{/each}}
+
+		<a href="http://localhost:3000/home?page={{ article.page + 1 }}" class="next">下一页</a>
+	</div>
+{{/block}}
+
+
+<!-- 填充名为 `script` 的坑 -->
+{{block 'script'}}
+    <script>
+        // 功能一：实现上一页 下一页的显示与隐藏
+        let page = {{ article.page }}  // 获取当前页的标识
+        let maxPage = {{ article.pages }}  // 获取总页数
+        let next = document.querySelector('.next')
+        let pre = document.querySelector('.pre')
+
+        if (page + 1 > maxPage) {
+            next.style.display = 'none'
+        } else {
+            next.style.display = 'inline'
+        }
+        if (page - 1 < 1) {
+            pre.style.display = 'none'
+        } else {
+            pre.style.display = 'inline'
+        }
+    </script>
+{{/block}}
+
+
